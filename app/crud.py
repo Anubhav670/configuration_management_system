@@ -30,12 +30,7 @@ def update_configuration(db: Session, configuration: schemas.ConfigurationUpdate
         db.refresh(db_configuration)
     return db_configuration
 
-# def delete_configuration(db: Session, country_code: str, business_name: str):
-#     db_configuration = get_configuration(db, country_code, business_name)
-#     if db_configuration:
-#         db.delete(db_configuration)
-#         db.commit()
-#     return db_configuration
+
 
 def delete_configuration(db: Session, country_code: str, business_name: str):
     configuration = get_configuration(db, country_code, business_name)
@@ -44,13 +39,7 @@ def delete_configuration(db: Session, country_code: str, business_name: str):
         db.commit()
     return configuration
 
-# def delete_configurations_by_country(db: Session, country_code: str):
-#     configurations = db.query(models.Configuration).filter(models.Configuration.country_code == country_code).all()
-#     if configurations:
-#         for config in configurations:
-#             db.delete(config)
-#         db.commit()
-#     return configurations
+
 
 def delete_configurations_by_country(db: Session, country_code: str):
     configurations = db.query(models.Configuration).filter_by(country_code=country_code).all()

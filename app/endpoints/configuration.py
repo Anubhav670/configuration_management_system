@@ -14,16 +14,7 @@ def create_configuration(configuration: schemas.ConfigurationCreate, db: Session
         raise HTTPException(status_code=400, detail="Configuration already exists for this business")
     return crud.create_configuration(db, configuration)
 
-# @router.get("/get_configurations/{country_code}", response_model=List[schemas.Configuration])
-# def get_configurations(country_code: str, db: Session = Depends(get_db)):
-#      try:
-#         configurations = crud.get_configurations(db, country_code)
-#         if not configurations:
-#             raise HTTPException(status_code=404, detail="No configurations found for the given country code")
-#         return configurations
-#      except Exception as e:
-#          # Handle other unexpected errors
-#          raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
+
 
 @router.get("/get_configurations/{country_code}", response_model=List[schemas.Configuration])
 def get_configurations(country_code: str, db: Session = Depends(get_db)):
@@ -55,19 +46,14 @@ def update_configuration(configuration: schemas.ConfigurationUpdate, db: Session
         raise HTTPException(status_code=404, detail="Configuration not found")
     return crud.update_configuration(db, configuration)
 
-# @router.delete("/delete_configuration/{country_code}/{business_name}", response_model=schemas.Configuration)
-# def delete_configuration(country_code: str, business_name: str, db: Session = Depends(get_db)):
-#     db_configuration = crud.get_configuration(db, country_code, business_name)
-#     if not db_configuration:
-#         raise HTTPException(status_code=404, detail="Configuration not found")
-#     return crud.delete_configuration(db, country_code, business_name)
+
 
 @router.delete("/delete_configuration/{country_code}/{business_name}", response_model=schemas.Configuration)
 def delete_configuration(country_code: str, business_name: str, db: Session = Depends(get_db)):
     try:
         db_configuration = crud.get_configuration(db, country_code, business_name)
         if not db_configuration:
-             raise HTTPException(status_code=404, detail="No configurations found for the given country code")
+             raise HTTPException(status_code=404, detail="No configurations found for the given country code or Business name")
         return crud.delete_configuration(db, country_code, business_name)
     except ProgrammingError:
         raise HTTPException(status_code=500, detail="Database error: The configuration table does not exist. Please ensure the table is created.")
@@ -78,26 +64,12 @@ def delete_configuration(country_code: str, business_name: str, db: Session = De
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
 
-# @router.delete("/delete_configurations/{country_code}", response_model=List[schemas.Configuration])
-# def delete_configurations_by_country(country_code: str, db: Session = Depends(get_db)):
-#     configurations = crud.delete_configurations_by_country(db, country_code)
-#     if not configurations:
-#         raise HTTPException(status_code=404, detail="No configurations found for the given country code")
-#     return configurations
+
 
 @router.delete("/delete_configurations/{country_code}", response_model=List[schemas.Configuration])
 def delete_configurations_by_country(country_code: str, db: Session = Depends(get_db)):
     try:
         configurations = crud.delete_configurations_by_country(db, country_code)
-    #     if not configurations:
-    #         raise HTTPException(status_code=404, detail="No configurations found for the given country code")
-    #     return configurations
-    # except HTTPException as e:
-    #     # Re-raise HTTPException to return the appropriate status code and detail message
-    #     raise e
-    # except Exception as e:
-    #     # Handle unexpected errors
-    #     raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
         if not configurations:
              raise HTTPException(status_code=404, detail="No configurations found for the given country code")
         return configurations
